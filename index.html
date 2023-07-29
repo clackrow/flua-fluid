@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.js"></script>
+    <title>Document</title>
+    <style>
+        .flua {
+            position: absolute;
+            width: 70%;
+            bottom: 30%;
+            margin-left: 0;
+            margin-right: 0;
+        }
+    </style>
+</head>
+<body>
+    <img src="https://lp-flua.vercel.app/logo_flua.gif" alt="" class="flua">
+    <script>
+        class Particle {
+            constructor() {
+                this.x = random(0, width);
+                this.y = random(0, height);
+                this.velY = 0;
+                this.velX = 0;
+                this.g = 0.1;
+            } 
+            show(){
+                fill(0, 0, 255);
+                noStroke()
+                ellipse(this.x, this.y, 100, 100)
+            }
+            distance(particle) {
+                const x_dif = this.x - particle.x
+                const y_dif = this.y - particle.y
+                return sqrt(pow(x_dif, 2) + pow(y_dif, 2))
+            }
+            animate() {
+                this.y += this.velY;
+                this.x += this.velX;
+                this.velY += this.g;
+                if(this.y > height - 10) this.velY = -0.5
+                if(this.y < 10) this.velY = 0.5
+                if(this.x > width - 10) this.velX = -0.5
+                if(this.x < 10) this.velX = 0.5
+                this.velX += constrain(rotationX, -3, 3);
+                this.velY += constrain(rotationY, -3, 3);
+            }
+            repel(other_particles) {
+                other_particles.forEach((particle) => {
+                if(particle.x == this.x && particle.y == this.y) return
+                const distance = this.distance(particle)
+                if(distance > 50) return
+                this.velX += (this.x - particle.x)/pow(distance, 2)
+                this.velY += (this.y - particle.y)/pow(distance, 2)
+                })
+            }
+                                        
+                                        
+            }
+
+            function setup() {
+                let canvas = createCanvas(windowWidth, windowHeight);
+                canvas.position(0, 0)
+                canvas.style('z-index', '-1')
+                particles = []
+                for(let i = 0; i < parseInt(windowWidth/10); i++){
+                    particles.push(new Particle())
+                }
+            }
+
+            function draw() {
+                background(220);
+                particles.forEach((particle) => {
+                    particle.show();
+                    particle.animate();
+                    particle.repel(particles)
+                })
+            }
+
+            function windowResized() {
+                resizeCanvas(windowWidth, windowHeight);
+            }
+    </script>
+</body>
+</html>
