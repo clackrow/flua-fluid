@@ -22,6 +22,7 @@
             constructor() {
                 this.x = random(0, width);
                 this.y = random(0, height);
+                this.radius = random(50, 150)
                 this.velY = 0;
                 this.velX = 0;
                 this.g = 0.1;
@@ -29,7 +30,7 @@
             show(){
                 fill(0, 0, 255);
                 noStroke()
-                ellipse(this.x, this.y, 150, 150)
+                ellipse(this.x, this.y, this.radius, this.radius)
             }
             distance(particle) {
                 const x_dif = this.x - particle.x
@@ -40,7 +41,7 @@
                 this.y += this.velY;
                 this.x += this.velX;
                 this.velY += this.g;
-                if(this.y > height - 10) this.velY = -0.5
+                if(this.y > height - 10) this.velY = random(-2, -0.5)
                 if(this.y < 10) this.velY = 0.5
                 if(this.x > width - 10) this.velX = -0.5
                 if(this.x < 10) this.velX = 0.5
@@ -49,11 +50,11 @@
             }
             repel(other_particles) {
                 other_particles.forEach((particle) => {
-                if(particle.x == this.x && particle.y == this.y) return
-                const distance = this.distance(particle)
-                if(distance > 50) return
-                this.velX += (this.x - particle.x)/pow(distance, 2)
-                this.velY += (this.y - particle.y)/pow(distance, 2)
+                    if(particle.x == this.x && particle.y == this.y) return
+                    const distance = this.distance(particle)
+                    if(distance > (this.radius + particle.radius) - 50) return
+                    this.velX += (this.x - particle.x)/pow(distance, 2)
+                    this.velY += (this.y - particle.y)/pow(distance, 2)
                 })
             }
                                         
@@ -80,6 +81,10 @@
             }
 
             function windowResized() {
+                particles = []
+                for(let i = 0; i < parseInt(windowWidth/10); i++){
+                    particles.push(new Particle())
+                }
                 resizeCanvas(windowWidth, windowHeight);
             }
     </script>
