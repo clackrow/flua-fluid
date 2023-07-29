@@ -44,8 +44,8 @@
                 if(this.y < 10) this.velY = 0.5
                 if(this.x > width - 10) this.velX = -0.5
                 if(this.x < 10) this.velX = 0.5
-                this.velX += constrain(rotationX, -3, 3);
-                this.velY += constrain(rotationY, -3, 3);
+                // this.velX += constrain(rotationX, -3, 3);
+                // this.velY += constrain(rotationY, -3, 3);
             }
             repel(other_particles) {
                 other_particles.forEach((particle) => {
