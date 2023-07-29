@@ -18,6 +18,7 @@
 <body>
     <img src="https://lp-flua.vercel.app/logo_flua.gif" alt="" class="flua">
     <script>
+        p5.disableFriendlyErrors = true;
         class Particle {
             constructor() {
                 this.x = random(0, width);
@@ -25,16 +26,16 @@
                 this.radius = random(50, 150)
                 this.velY = 0;
                 this.velX = 0;
-                this.g = 0.1;
+                this.g = 0.15;
             } 
             show(){
                 fill(0, 0, 255);
                 noStroke()
                 ellipse(this.x, this.y, this.radius, this.radius)
             }
-            distance(particle) {
-                const x_dif = this.x - particle.x
-                const y_dif = this.y - particle.y
+            distance(x, y) {
+                const x_dif = this.x - x
+                const y_dif = this.y - y
                 return sqrt(pow(x_dif, 2) + pow(y_dif, 2))
             }
             animate() {
@@ -51,11 +52,13 @@
             repel(other_particles) {
                 other_particles.forEach((particle) => {
                     if(particle.x == this.x && particle.y == this.y) return
-                    const distance = this.distance(particle)
-                    if(distance > (this.radius + particle.radius) - 50) return
+                    const distance = this.distance(particle.x, particle.y)
+                    if(distance > (this.radius + particle.radius)) return
                     this.velX += (this.x - particle.x)/pow(distance, 2)
                     this.velY += (this.y - particle.y)/pow(distance, 2)
                 })
+                if(this.x - mouseX > 10) this.velX += -20*(this.x - mouseX)/pow(this.distance(mouseX, mouseY), 2)
+                if(this.y - mouseY > 10) this.velY += -20*(this.y - mouseY)/pow(this.distance(mouseX, mouseY), 2)
             }
                                         
                                         
